@@ -1,14 +1,15 @@
-import { User } from "./user";
+import { Transaction } from "./transaction";
 
 
-describe('User', () => {
-  it('Should create a user', () => {
-    const user = new User({
-      name: 'string',
-      email: 'string',
-      password: 'string'
+describe('Transaction', () => {
+  it('Should make a transaction', () => {
+    const transaction = new Transaction({
+      senderId: 'id1',
+      receiverId: 'id2',
+      amount: 2,
+      status: 'pending'
     });
 
-    expect(user).toBeTruthy();
+    expect(transaction).toBeTruthy();
   });
 });

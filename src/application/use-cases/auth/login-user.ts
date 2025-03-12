@@ -1,7 +1,7 @@
 import { UserRepository } from '@application/protocols/db/user-repository';
+import { AuthService } from '@infra/services/auth.service';
+import { HashService } from '@infra/services/hash.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from 'src/infra/services/auth.service';
-import { HashService } from 'src/infra/services/hash.service';
 
 
 @Injectable()
@@ -14,7 +14,7 @@ export class LoginUser {
 
   async execute(email: string, password: string) {
     const user = await this.userRepository.findByEmail(email);
-
+    console.log(user)
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }

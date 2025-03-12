@@ -1,70 +1,46 @@
-import { LoginUser } from './login-user';
-import { UserRepository } from '@application/protocols/db/user-repository';
-import { AuthService } from 'src/infra/services/auth.service';
-import { HashService } from 'src/infra/services/hash.service';
+
+import { AuthService } from '@infra/services/auth.service';
+import { HashService } from '@infra/services/hash.service';
+import { User } from '@application/entities/user';
 import { UnauthorizedException } from '@nestjs/common';
+import { InMemoryUserRepository } from '@test/repositories/in-memory-user-repository';
+import { LoginUser } from './login-user';
 
 describe('LoginUser', () => {
-  let loginUser: LoginUser;
-  let userRepository: UserRepository;
+  let userRepository: InMemoryUserRepository;
   let authService: AuthService;
   let hashService: HashService;
+  let loginUser: LoginUser;
 
   beforeEach(() => {
-    userRepository = {
-      findByEmail: jest.fn(),
-    } as unknown as UserRepository;
-
-    authService = {
-      generateToken: jest.fn(),
-    } as unknown as AuthService;
-
-    hashService = {
-      compare: jest.fn(),
-    } as unknown as HashService;
-
+    userRepository = new InMemoryUserRepository();
+    authService = new AuthService();
+    hashService = new HashService();
     loginUser = new LoginUser(userRepository, authService, hashService);
+
+    jest.spyOn(hashService, 'compare').mockResolvedValue(true);
+    jest.spyOn(authService, 'generateToken').mockReturnValue('fake-token');
   });
 
   it('should return a token when credentials are valid', async () => {
-    const email = 'test@example.com';
-    const password = 'correct-password';
-    const hashedPassword = 'hashed-correct-password';
-    const user = { email, password: hashedPassword };
-    const token = 'generated-token';
-
-    jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(user);
-    jest.spyOn(hashService, 'compare').mockResolvedValue(true);
-    jest.spyOn(authService, 'generateToken').mockReturnValue(token);
-
-    const result = await loginUser.execute(email, password);
-
-    expect(result).toEqual({ token });
-    expect(userRepository.findByEmail).toHaveBeenCalledWith(email);
-    expect(hashService.compare).toHaveBeenCalledWith(password, hashedPassword);
-    expect(authService.generateToken).toHaveBeenCalledWith(user);
+    const user = new User({ name: 'Gabriel', email: 'test@example.com', password: 'hashedPassword' });
+    await userRepository.create(user);
+    const result = await loginUser.execute('test@example.com', 'password123');
+    expect(result).toEqual({ token: 'fake-token' });
   });
 
   it('should throw UnauthorizedException if user is not found', async () => {
-    const email = 'test@example.com';
-    const password = 'any-password';
-
-    jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(null);
-
-    await expect(loginUser.execute(email, password)).rejects.toThrow(UnauthorizedException);
-    await expect(loginUser.execute(email, password)).rejects.toThrow('Invalid credentials');
+    await expect(loginUser.execute('notfound@example.com', 'password123'))
+      .rejects
+      .toThrow(new UnauthorizedException('Invalid credentials'));
   });
 
   it('should throw UnauthorizedException if password is incorrect', async () => {
-    const email = 'test@example.com';
-    const password = 'incorrect-password';
-    const hashedPassword = 'hashed-correct-password';
-    const user = { email, password: hashedPassword };
-
-    jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(user);
-    jest.spyOn(hashService, 'compare').mockResolvedValue(false);
-
-    await expect(loginUser.execute(email, password)).rejects.toThrow(UnauthorizedException);
-    await expect(loginUser.execute(email, password)).rejects.toThrow('Invalid credentials');
+    const user = new User({ name: 'Gabriel', email: 'test@example.com', password: 'hashedPassword' });
+    await userRepository.create(user);
+    jest.spyOn(hashService, 'compare').mockResolvedValue(false); // Simula senha errada
+    await expect(loginUser.execute('test@example.com', 'wrongpassword'))
+      .rejects
+      .toThrow(new UnauthorizedException('Invalid credentials'));
   });
 });

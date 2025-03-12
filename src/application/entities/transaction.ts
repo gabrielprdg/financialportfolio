@@ -19,7 +19,7 @@ export class Transaction {
     this._id = id ?? randomUUID();
     this.props = {
       ...props,
-      status: props.status ?? 'pending',
+      status: props.status ?? 'success',
       amount: props.amount ?? 0,
       createdAt: props.createdAt ?? new Date(),
     };
@@ -58,7 +58,7 @@ export class Transaction {
   }
 
   public get status(): string {
-    return this.props.status ?? "pending";
+    return this.props.status ?? "success";
   }
 
   public get createdAt(): Date {

@@ -9,6 +9,7 @@ interface RegisterUserDataRequest {
   name: string
   email: string
   password: string
+  balance: number
 }
 
 type RegisterUserResponse = {
@@ -23,7 +24,7 @@ export class RegisterUser {
   ) { }
 
   async execute(userData: RegisterUserDataRequest): Promise<RegisterUserResponse> {
-    const { name, email, password } = userData
+    const { name, email, password, balance } = userData
 
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
@@ -34,7 +35,8 @@ export class RegisterUser {
     const user = new User({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      balance
     })
 
     await this.userRepository.create(user);

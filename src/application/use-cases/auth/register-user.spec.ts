@@ -16,6 +16,7 @@ describe("RegisterUser", () => {
       name: "Gabriel Rodrigues",
       email: "gabrielrod@example.com",
       password: "password",
+      balance: 100
     };
     jest.spyOn(bcrypt, 'hash').mockResolvedValue(`hashed-${userData.password}`);
 
@@ -33,6 +34,7 @@ describe("RegisterUser", () => {
       name: "John Doe",
       email: "johndoe@example.com",
       password: "plain-password",
+      balance: 100
     };
 
     jest.spyOn(bcrypt, 'hash').mockResolvedValue(`hashed-${userData.password}`);

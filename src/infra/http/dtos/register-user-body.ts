@@ -11,4 +11,7 @@ export class RegisterUserBody {
 
   @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
+  balance: number;
 }

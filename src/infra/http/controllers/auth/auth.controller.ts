@@ -14,12 +14,13 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() body: RegisterUserBody) {
-    const { name, email, password } = body;
+    const { name, email, password, balance } = body;
 
     const { user } = await this.registerUser.execute({
       name,
       email,
       password,
+      balance
     });
 
     return UserViewModel.toHTTP(user);

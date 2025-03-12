@@ -7,7 +7,7 @@ describe('Transaction', () => {
       senderId: 'id1',
       receiverId: 'id2',
       amount: 2,
-      status: 'pending'
+      status: 'sucess'
     });
 
     expect(transaction).toBeTruthy();

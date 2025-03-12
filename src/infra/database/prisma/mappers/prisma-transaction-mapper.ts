@@ -18,7 +18,8 @@ export class PrismaTransactionMapper {
       {
         senderId: raw.senderId,
         receiverId: raw.receiverId,
-        amount: raw.amount.toNumber()
+        amount: raw.amount.toNumber(),
+        status: raw.status
       },
       raw.id
     )

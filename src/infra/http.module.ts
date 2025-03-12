@@ -7,6 +7,7 @@ import { HashService } from "./services/hash.service";
 import { AuthService } from "./services/auth.service";
 import { AddTransaction } from "@application/use-cases/transaction/add-transaction";
 import { TransactionController } from "./http/controllers/transaction/transaction.controller";
+import { RevertTransaction } from "@application/use-cases/transaction/revert-transaction";
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +15,7 @@ import { TransactionController } from "./http/controllers/transaction/transactio
   providers: [
     RegisterUser,
     LoginUser,
+    RevertTransaction,
     HashService,
     AuthService,
     AddTransaction

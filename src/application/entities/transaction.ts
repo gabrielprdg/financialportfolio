@@ -4,7 +4,7 @@ export interface TransactionModel {
   senderId: string
   receiverId: string
   amount: number
-  status: string
+  status?: string
   createdAt: Date
 }
 
@@ -13,12 +13,14 @@ export class Transaction {
   private props: TransactionModel;
 
   constructor(
-    props: Replace<TransactionModel, { createdAt?: Date }>,
+    props: Replace<TransactionModel, { status?: string, createdAt?: Date }>,
     id?: string,
   ) {
     this._id = id ?? randomUUID();
     this.props = {
       ...props,
+      status: props.status ?? 'pending',
+      amount: props.amount ?? 0,
       createdAt: props.createdAt ?? new Date(),
     };
   }

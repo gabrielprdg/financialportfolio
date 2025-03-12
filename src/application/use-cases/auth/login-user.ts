@@ -14,7 +14,6 @@ export class LoginUser {
 
   async execute(email: string, password: string) {
     const user = await this.userRepository.findByEmail(email);
-    console.log(user)
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }

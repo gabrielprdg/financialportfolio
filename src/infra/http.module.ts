@@ -5,15 +5,18 @@ import { RegisterUser } from "@application/use-cases/auth/register-user";
 import { LoginUser } from "@application/use-cases/auth/login-user";
 import { HashService } from "./services/hash.service";
 import { AuthService } from "./services/auth.service";
+import { AddTransaction } from "@application/use-cases/transaction/add-transaction";
+import { TransactionController } from "./http/controllers/transaction/transaction.controller";
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [AuthController],
+  controllers: [AuthController, TransactionController],
   providers: [
     RegisterUser,
     LoginUser,
     HashService,
-    AuthService
+    AuthService,
+    AddTransaction
   ],
 })
 export class HttpModule { }

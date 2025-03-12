@@ -3,6 +3,7 @@ import { TransactionRepository } from '@application/protocols/db/transaction-rep
 import { UserRepository } from '@application/protocols/db/user-repository';
 import { Injectable } from '@nestjs/common';
 import { UserDoesNotExists } from '../errors/user-does-not-exists';
+import { NotEnoughFundsError } from '../errors/not-enough-funds-error';
 
 
 interface TransactionDataRequest {
@@ -24,17 +25,27 @@ export class AddTransaction {
       [senderId, receiverId].map(id => this.userRepository.findById(id))
     );
 
-    console.log('users', users)
-
     if (users.some(user => user === null || user === undefined)) {
       throw new UserDoesNotExists();
     }
+
+    const [sender, receiver] = users;
+
+    if (receiver && sender?.balance !== undefined && sender.balance < amount) {
+      throw new NotEnoughFundsError()
+    }
+
+    sender?.decrease(amount)
+    receiver?.increase(amount)
+
 
     const transaction = new Transaction({
       senderId,
       receiverId,
       amount
     })
+
+    await Promise.all([sender, receiver].map(user => user ? this.userRepository.save(user) : Promise.resolve()))
 
     await this.transactionRepository.create(transaction);
   }

@@ -57,8 +57,8 @@ export class Transaction {
     this.props.status = status;
   }
 
-  public get status(): string | null | undefined {
-    return this.props.status;
+  public get status(): string {
+    return this.props.status ?? "pending";
   }
 
   public get createdAt(): Date {

@@ -4,7 +4,7 @@ export interface UserModel {
   name: string
   email: string
   password: string
-  balance?: string | null
+  balance?: number | null
   createdAt: Date
 }
 
@@ -13,7 +13,7 @@ export class User {
   private props: UserModel;
 
   constructor(
-    props: Replace<UserModel, { amount?: string, createdAt?: Date }>,
+    props: Replace<UserModel, { balance?: number, createdAt?: Date }>,
     id?: string,
   ) {
     this._id = id ?? randomUUID();
@@ -51,15 +51,23 @@ export class User {
     return this.props.password;
   }
 
-  public set balance(balance: string) {
+  public set balance(balance: number) {
     this.props.balance = balance;
   }
 
-  public get balance(): string | null | undefined {
-    return this.props.balance;
+  public get balance(): number {
+    return this.props.balance ?? 0;
   }
 
   public get createdAt(): Date {
     return this.props.createdAt;
+  }
+
+  public increase(amount: number) {
+    this.props.balance = (this.props.balance ?? 0) + amount;
+  }
+
+  public decrease(amount: number) {
+    this.props.balance = (this.props.balance ?? 0) - amount;
   }
 }

@@ -13,7 +13,7 @@ services:
       - pg_data:/var/lib/postgresql/data
   api:
     build: .    
-    container_name: techtest_api
+    container_name: financialportfolio_api
     restart: always
     depends_on:
       - db

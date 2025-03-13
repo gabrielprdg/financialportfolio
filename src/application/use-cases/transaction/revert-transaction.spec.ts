@@ -4,6 +4,7 @@ import { InMemoryUserRepository } from '@test/repositories/in-memory-user-reposi
 import { InMemoryTransactionRepository } from '@test/repositories/in-memory-transaction-repository';
 import { RevertTransaction } from './revert-transaction';
 import { TransactionAlreadyRevertedError } from '../errors/transaction-already-reverted';
+import { TransactionNotFoundError } from '../errors/transaction-not-found';
 
 
 describe('RevertTransaction', () => {
@@ -36,7 +37,7 @@ describe('RevertTransaction', () => {
   it('should throw an error if the transaction does not exist', async () => {
     await expect(
       revertTransaction.execute({ id: 'non-existent-transaction' })
-    ).rejects.toThrow('Transaction not found');
+    ).rejects.toThrow(TransactionNotFoundError);
   });
 
   it('should throw TransactionAlreadyRevertedError if the transaction is already reverted', async () => {

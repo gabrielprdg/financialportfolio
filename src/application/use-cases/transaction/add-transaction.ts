@@ -6,6 +6,10 @@ import { UserDoesNotExists } from '../errors/user-does-not-exists';
 import { NotEnoughFundsError } from '../errors/not-enough-funds-error';
 
 
+interface TransactionDataResponse {
+  id: string
+}
+
 interface TransactionDataRequest {
   senderId: string
   receiverId: string
@@ -18,7 +22,7 @@ export class AddTransaction {
     private readonly userRepository: UserRepository
   ) { }
 
-  async execute(transactionData: TransactionDataRequest) {
+  async execute(transactionData: TransactionDataRequest): Promise<TransactionDataResponse> {
     const { senderId, receiverId, amount } = transactionData
 
     const users = await Promise.all(
@@ -47,6 +51,7 @@ export class AddTransaction {
 
     await Promise.all([sender, receiver].map(user => user ? this.userRepository.save(user) : Promise.resolve()))
 
-    await this.transactionRepository.create(transaction);
+    const id = await this.transactionRepository.create(transaction);
+    return { id }
   }
 }

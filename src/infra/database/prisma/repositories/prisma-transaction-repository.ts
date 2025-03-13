@@ -8,10 +8,17 @@ import { PrismaTransactionMapper } from "../mappers/prisma-transaction-mapper";
 export class PrismaTransactionRepository implements TransactionRepository {
   constructor(private prismaService: PrismaService) { }
 
-  async create(transaction: Transaction): Promise<void> {
+  async create(transaction: Transaction): Promise<string> {
     const raw = PrismaTransactionMapper.toPrisma(transaction);
 
-    await this.prismaService.transaction.create({ data: raw, });
+    const createdTransaction = await this.prismaService.transaction.create({
+      data: raw,
+      select: {
+        id: true,
+      },
+    });
+
+    return createdTransaction.id;
   }
 
   async findById(id: string): Promise<Transaction | null> {

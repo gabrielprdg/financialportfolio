@@ -2,6 +2,7 @@ import { TransactionRepository } from '@application/protocols/db/transaction-rep
 import { UserRepository } from '@application/protocols/db/user-repository';
 import { Injectable } from '@nestjs/common';
 import { TransactionAlreadyRevertedError } from '../errors/transaction-already-reverted';
+import { TransactionNotFoundError } from '../errors/transaction-not-found';
 
 
 interface RevertTransactionDataRequest {
@@ -20,7 +21,7 @@ export class RevertTransaction {
     const transaction = await this.transactionRepository.findById(id)
 
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new TransactionNotFoundError()
     }
 
     const { senderId, receiverId } = transaction

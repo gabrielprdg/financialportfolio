@@ -5,8 +5,9 @@ export class InMemoryTransactionRepository implements TransactionRepository {
   public transactions: Transaction[] = [];
 
 
-  async create(transaction: Transaction): Promise<void> {
+  async create(transaction: Transaction): Promise<string> {
     this.transactions.push(transaction);
+    return transaction.id
   }
 
   async findById(transactionId: string): Promise<Transaction | null> {

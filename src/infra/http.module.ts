@@ -9,13 +9,16 @@ import { AddTransaction } from "@application/use-cases/transaction/add-transacti
 import { TransactionController } from "./http/controllers/transaction/transaction.controller";
 import { RevertTransaction } from "@application/use-cases/transaction/revert-transaction";
 import { LoadTransactions } from "@application/use-cases/transaction/load-transactions";
+import { UserController } from "./http/controllers/user/user-controller";
+import { LoadUsers } from "@application/use-cases/user/load-users";
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [AuthController, TransactionController],
+  controllers: [AuthController, TransactionController, UserController],
   providers: [
     RegisterUser,
     LoginUser,
+    LoadUsers,
     RevertTransaction,
     LoadTransactions,
     HashService,

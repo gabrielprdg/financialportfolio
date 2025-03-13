@@ -41,4 +41,8 @@ export class InMemoryUserRepository implements UserRepository {
     }
   }
 
+  async loadUsers(): Promise<User[]> {
+    return this.users
+  }
+
 }

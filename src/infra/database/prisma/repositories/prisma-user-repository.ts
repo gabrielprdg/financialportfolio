@@ -54,4 +54,11 @@ export class PrismaUserRepository implements UserRepository {
       data: raw,
     });
   }
+
+
+  async loadUsers(): Promise<User[]> {
+    const users = await this.prismaService.user.findMany();
+
+    return PrismaUserMapper.toArrayDomain(users);
+  }
 }

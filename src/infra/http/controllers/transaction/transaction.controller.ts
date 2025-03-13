@@ -29,7 +29,7 @@ export class TransactionController {
       senderId, receiverId, amount
     });
 
-    return { id, message: "Transaction completed successfully" }
+    return { id, message: "Transaction success successfully" }
   }
 
   @Post(':id/revert')

@@ -7,6 +7,10 @@ import { TransactionAlreadyRevertedError } from '../errors/transaction-already-r
 import { TransactionNotFoundError } from '../errors/transaction-not-found';
 
 
+const makeUserParams = () => ({
+  name: 'Gabriel', email: 'gabriel.rodrigues@example.com', password: '123456', balance: 99
+})
+
 describe('RevertTransaction', () => {
   let userRepository: InMemoryUserRepository;
   let transactionRepository: InMemoryTransactionRepository;
@@ -24,7 +28,7 @@ describe('RevertTransaction', () => {
     await userRepository.create(sender);
     await userRepository.create(receiver);
 
-    const transaction = new Transaction({ senderId: sender.id, receiverId: receiver.id, amount: 30, status: 'completed' });
+    const transaction = new Transaction({ senderId: sender.id, receiverId: receiver.id, amount: 30, status: 'success' });
     await transactionRepository.create(transaction);
 
     await revertTransaction.execute({ id: transaction.id });
@@ -41,8 +45,8 @@ describe('RevertTransaction', () => {
   });
 
   it('should throw TransactionAlreadyRevertedError if the transaction is already reverted', async () => {
-    const sender = new User({ name: 'Sender', email: 'sender@example.com', password: '123456', balance: 100 });
-    const receiver = new User({ name: 'Receiver', email: 'receiver@example.com', password: 'abcdef', balance: 50 });
+    const sender = new User(makeUserParams());
+    const receiver = new User(makeUserParams());
     await userRepository.create(sender);
     await userRepository.create(receiver);
 

@@ -1,5 +1,4 @@
-import { Transaction } from "@prisma/client";
-
+import { Transaction } from "@application/entities/transaction";
 export class TransactionViewModel {
   static toHTTP(transaction: Transaction) {
     return {

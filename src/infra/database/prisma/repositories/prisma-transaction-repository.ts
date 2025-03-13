@@ -15,24 +15,24 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   async findById(id: string): Promise<Transaction | null> {
-    const task = await this.prismaService.transaction.findUnique({
+    const transaction = await this.prismaService.transaction.findUnique({
       where: {
         id,
       },
     });
 
-    if (!task) {
+    if (!transaction) {
       return null;
     }
 
-    return PrismaTransactionMapper.toDomain(task);
+    return PrismaTransactionMapper.toDomain(transaction);
   }
 
 
   async loadTransactions(): Promise<Transaction[]> {
-    const tasks = await this.prismaService.transaction.findMany();
+    const transaction = await this.prismaService.transaction.findMany();
 
-    return PrismaTransactionMapper.toArrayDomain(tasks);
+    return PrismaTransactionMapper.toArrayDomain(transaction);
   }
 
 

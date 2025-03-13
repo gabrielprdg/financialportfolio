@@ -6,6 +6,10 @@ import { UnauthorizedException } from '@nestjs/common';
 import { InMemoryUserRepository } from '@test/repositories/in-memory-user-repository';
 import { LoginUser } from './login-user';
 
+const makeUserParams = () => ({
+  name: 'Gabriel', email: 'gabriel.rodrigues@example.com', password: '123456', balance: 99
+})
+
 describe('LoginUser', () => {
   let userRepository: InMemoryUserRepository;
   let authService: AuthService;
@@ -23,23 +27,23 @@ describe('LoginUser', () => {
   });
 
   it('should return a token when credentials are valid', async () => {
-    const user = new User({ name: 'Gabriel', email: 'test@example.com', password: 'hashedPassword' });
+    const user = new User(makeUserParams());
     await userRepository.create(user);
-    const result = await loginUser.execute('test@example.com', 'password123');
+    const result = await loginUser.execute('gabriel.rodrigues@example.com', '123456');
     expect(result).toEqual({ token: 'fake-token' });
   });
 
   it('should throw UnauthorizedException if user is not found', async () => {
-    await expect(loginUser.execute('notfound@example.com', 'password123'))
+    await expect(loginUser.execute('gbariel2@example.com', 'password123'))
       .rejects
       .toThrow(new UnauthorizedException('Invalid credentials'));
   });
 
   it('should throw UnauthorizedException if password is incorrect', async () => {
-    const user = new User({ name: 'Gabriel', email: 'test@example.com', password: 'hashedPassword' });
+    const user = new User(makeUserParams());
     await userRepository.create(user);
-    jest.spyOn(hashService, 'compare').mockResolvedValue(false); // Simula senha errada
-    await expect(loginUser.execute('test@example.com', 'wrongpassword'))
+    jest.spyOn(hashService, 'compare').mockResolvedValue(false);
+    await expect(loginUser.execute('gabriel.rodrigues@example.com', 'wrongpassword'))
       .rejects
       .toThrow(new UnauthorizedException('Invalid credentials'));
   });

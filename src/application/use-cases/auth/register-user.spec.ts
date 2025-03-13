@@ -4,6 +4,9 @@ import * as bcrypt from 'bcrypt';
 import { UserAlreadyExists } from "../errors/user-already-exists";
 import { RegisterUser } from "./register-user";
 
+const makeUserParams = () => ({
+  name: 'Gabriel', email: 'gabriel.rodrigues@example.com', password: 'password', balance: 99
+})
 
 jest.mock('bcrypt');
 describe("RegisterUser", () => {
@@ -12,15 +15,9 @@ describe("RegisterUser", () => {
     const userRepository = new InMemoryUserRepository();
     const registerUser = new RegisterUser(userRepository, bcrypt)
 
-    const userData = {
-      name: "Gabriel Rodrigues",
-      email: "gabrielrod@example.com",
-      password: "password",
-      balance: 100
-    };
-    jest.spyOn(bcrypt, 'hash').mockResolvedValue(`hashed-${userData.password}`);
+    jest.spyOn(bcrypt, 'hash').mockResolvedValue(`hashed-${makeUserParams().password}`);
 
-    const { user } = await registerUser.execute(userData);
+    const { user } = await registerUser.execute(makeUserParams());
     expect(userRepository.users).toHaveLength(1);
     expect(userRepository.users[0]).toEqual(user);
     expect(userRepository.users[0]).toHaveProperty("props.password", "hashed-password");

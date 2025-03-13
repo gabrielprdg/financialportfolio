@@ -18,7 +18,7 @@ export class RevertTransaction {
     const { id } = transactionData
 
     const transaction = await this.transactionRepository.findById(id)
-    console.log(transaction)
+
     if (!transaction) {
       throw new Error('Transaction not found');
     }

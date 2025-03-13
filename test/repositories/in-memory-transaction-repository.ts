@@ -24,4 +24,15 @@ export class InMemoryTransactionRepository implements TransactionRepository {
     return this.transactions
   }
 
+  async save(transaction: Transaction): Promise<void> {
+    const index = this.transactions.findIndex((existingTransaction) => existingTransaction.id === transaction.id);
+
+    if (index !== -1) {
+      this.transactions[index] = transaction;
+    } else {
+      this.transactions.push(transaction);
+    }
+  }
+
+
 }
